@@ -6,23 +6,18 @@ pipeline {
         maven 'Maven3'
     }
 
-    environment {
-        GIT_REPO = 'https://github.com/AmelChayeb/Enonce-Projet-DevOps-5eme-2526.git'
-        BRANCH = 'main'
-    }
-
     stages {
         stage('Checkout') {
             steps {
                 echo '📥 Clonage du dépôt Git...'
-                git url: "${env.GIT_REPO}", branch: "${env.BRANCH}"
+                git url: 'https://github.com/AmelChayeb/Enonce-Projet-DevOps-5eme-2526.git', branch: 'main'
             }
         }
 
         stage('Clean') {
             steps {
                 echo '🧹 Nettoyage du dossier target...'
-                sh 'rm -rf target/* || true'
+                sh 'rm -rf target/*'
             }
         }
 
@@ -46,7 +41,7 @@ pipeline {
             echo '✅ Pipeline terminé avec succès !'
         }
         failure {
-            echo '❌ Erreur dans le pipeline.'
+            echo '❌ Pipeline échoué.'
         }
     }
 }
