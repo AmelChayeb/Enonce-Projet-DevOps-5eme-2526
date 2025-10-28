@@ -30,7 +30,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo '⚙️ Compilation du projet...'
-                sh './mvnw clean compile'
+                sh './mvnw clean package -DskipTests'
             }
         }
 
