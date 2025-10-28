@@ -6,10 +6,11 @@ pipeline {
         maven 'Maven3'
     }
 
-    environment {
-        GIT_REPO = 'https://github.com/NaifarSirine/Enonce-Projet-DevOps-5eme-2526.git'
-        BRANCH = 'main'
-    }
+   environment {
+    GIT_REPO = 'https://github.com/AmelChayeb/Enonce-Projet-DevOps-5eme-2526.git'
+    BRANCH = 'main'
+}
+
 
     stages {
         stage('Checkout') {
