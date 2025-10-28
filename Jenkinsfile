@@ -6,11 +6,10 @@ pipeline {
         maven 'Maven3'
     }
 
-   environment {
-    GIT_REPO = 'https://github.com/AmelChayeb/Enonce-Projet-DevOps-5eme-2526.git'
-    BRANCH = 'main'
-}
-
+    environment {
+        GIT_REPO = 'https://github.com/AmelChayeb/Enonce-Projet-DevOps-5eme-2526.git'
+        BRANCH = 'main'
+    }
 
     stages {
         stage('Checkout') {
@@ -23,14 +22,14 @@ pipeline {
         stage('Clean') {
             steps {
                 echo '🧹 Nettoyage du dossier target...'
-                sh 'rm -rf target/*'
+                sh 'rm -rf target/* || true'
             }
         }
 
         stage('Build') {
             steps {
                 echo '⚙️ Compilation du projet...'
-                sh './mvnw clean package -DskipTests'
+                sh './mvnw clean compile'
             }
         }
 
@@ -51,4 +50,3 @@ pipeline {
         }
     }
 }
-
