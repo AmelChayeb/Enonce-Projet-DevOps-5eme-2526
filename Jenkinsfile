@@ -1,47 +1,49 @@
 pipeline {
     agent any
 
+
     tools {
-        jdk 'JDK17'
-        maven 'Maven3'
+        jdk 'JDK21'         // or whatever name you gave in Jenkins
+        maven 'Maven3'      // must match the name above
     }
 
+   
     stages {
         stage('Checkout') {
             steps {
-                echo '📥 Clonage du dépôt Git...'
-                git url: 'https://github.com/AmelChayeb/Enonce-Projet-DevOps-5eme-2526.git', branch: 'main'
-            }
-        }
-
-        stage('Clean') {
-            steps {
-                echo '🧹 Nettoyage du dossier target...'
-                sh 'rm -rf target/*'
+                git branch: 'main', url: 'https://github.com/AmelChayeb/Enonce-Projet-DevOps-5eme-2526.git'
             }
         }
 
         stage('Build') {
             steps {
-                echo '⚙️ Compilation du projet...'
-                sh './mvnw clean compile'
+                echo 'Building the project...'
+                sh ' mvn clean package -DskipTests'
             }
         }
 
-        stage('Package') {
+        stage('Docker Build') {
             steps {
-                echo '📦 Création du livrable (.jar)...'
-                sh './mvnw package'
+                script {
+                    dockerImage = docker.build("amelchayeb/mywebapp:latest")
+                }
             }
         }
-    }
 
-    post {
-        success {
-            echo '✅ Pipeline terminé avec succès !'
+        stage('Test') {
+            steps {
+                echo 'Running tests (mock step for now)...'
+            }
         }
-        failure {
-            echo '❌ Pipeline échoué.'
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    docker.withRegistry('', 'dockerhub-credentials') {
+                        dockerImage.push()
+                    }
+                }
+            }
         }
     }
 }
