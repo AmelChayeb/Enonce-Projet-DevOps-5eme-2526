@@ -28,6 +28,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh "docker build -t ${env.DOCKER_IMAGE} ."
+
+        sh 'docker push amelchayeb/mywebapp:1.0'
             }
         }
 
