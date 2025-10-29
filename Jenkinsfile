@@ -1,49 +1,51 @@
 pipeline {
     agent any
 
-
     tools {
-        jdk 'JDK21'         // or whatever name you gave in Jenkins
-        maven 'Maven3'      // must match the name above
+        jdk 'JDK21'
+        maven 'Maven3'
     }
 
-   
+    environment {
+        GIT_REPO = 'https://github.com/AmelChayeb/Enonce-Projet-DevOps-5eme-2526.git'
+        BRANCH = 'main'
+        DOCKER_IMAGE = 'amelchayeb/mywebapp:1.0'
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/AmelChayeb/Enonce-Projet-DevOps-5eme-2526.git'
+                git url: "${env.GIT_REPO}", branch: "${env.BRANCH}"
             }
         }
 
-        stage('Build') {
+        stage('Build Maven Project') {
             steps {
-                echo 'Building the project...'
-                sh ' mvn clean package -DskipTests'
+                sh 'mvn clean package -DskipTests'
             }
         }
 
-        stage('Docker Build') {
+        stage('Build Docker Image') {
             steps {
-                script {
-                    dockerImage = docker.build("amelchayeb/mywebapp:latest")
-                }
+                sh "docker build -t ${env.DOCKER_IMAGE} ."
             }
         }
 
-        stage('Test') {
+        stage('Run Docker Container') {
             steps {
-                echo 'Running tests (mock step for now)...'
+                sh "docker stop mywebapp || true"
+                sh "docker rm mywebapp || true"
+                sh "docker run -d -p 8082:80 --name mywebapp ${env.DOCKER_IMAGE}"
             }
         }
+    }
 
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    docker.withRegistry('', 'dockerhub-credentials') {
-                        dockerImage.push()
-                    }
-                }
-            }
+    post {
+        success {
+            echo '✅ Pipeline finished successfully!'
+        }
+        failure {
+            echo '❌ Pipeline failed!'
         }
     }
 }
