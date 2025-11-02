@@ -10,6 +10,8 @@ pipeline {
         GIT_REPO = 'https://github.com/AmelChayeb/Enonce-Projet-DevOps-5eme-2526.git'
         BRANCH = 'main'
         DOCKER_IMAGE = 'amelchayeb/mywebapp:1.0'
+        SONARQUBE_SERVER = 'SonarQubeServer' // The name you gave in Jenkins > Configure System
+        SONAR_TOKEN = credentials('SONAR_TOKEN_ID') // Replace with your Sonar token ID in Jenkins
     }
 
     stages {
@@ -25,11 +27,21 @@ pipeline {
             }
         }
 
+        stage('SonarQube Analysis') {
+            environment {
+                PATH = "${tool 'Maven3'}/bin:${env.PATH}"
+            }
+            steps {
+                withSonarQubeEnv("${env.SONARQUBE_SERVER}") {
+                    sh "mvn sonar:sonar -Dsonar.login=${env.SONAR_TOKEN}"
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 sh "docker build -t ${env.DOCKER_IMAGE} ."
-
-        sh 'docker push amelchayeb/mywebapp:1.0'
+                sh "docker push ${env.DOCKER_IMAGE}"
             }
         }
 
