@@ -10,8 +10,8 @@ pipeline {
         GIT_REPO = 'https://github.com/AmelChayeb/Enonce-Projet-DevOps-5eme-2526.git'
         BRANCH = 'main'
         DOCKER_IMAGE = 'amelchayeb/mywebapp:1.0'
-        SONARQUBE_SERVER = 'SonarQubeServer' // The name you gave in Jenkins > Configure System
-        SONAR_TOKEN = credentials('SONAR_TOKEN_ID') // Replace with your Sonar token ID in Jenkins
+        SONARQUBE_SERVER = 'SonarQubeServer' // Jenkins > Configure System
+        SONAR_TOKEN = credentials('SONAR_TOKEN_ID') // Replace with your Sonar token ID
     }
 
     stages {
@@ -47,8 +47,10 @@ pipeline {
 
         stage('Run Docker Container') {
             steps {
-                sh "docker stop mywebapp || true"
-                sh "docker rm mywebapp || true"
+                // Force remove previous container if it exists
+                sh "docker rm -f mywebapp || true"
+
+                // Run container
                 sh "docker run -d -p 8082:80 --name mywebapp ${env.DOCKER_IMAGE}"
             }
         }
@@ -63,3 +65,4 @@ pipeline {
         }
     }
 }
+
