@@ -10,7 +10,7 @@ pipeline {
         GIT_REPO = 'https://github.com/AmelChayeb/Enonce-Projet-DevOps-5eme-2526.git'
         BRANCH = 'main'
         DOCKER_IMAGE = 'amelchayeb/mywebapp:1.0'
-        SONARQUBE_SERVER = 'SonarQubeServer' // Jenkins > Configure System
+        SONARQUBE_SERVER = 'MySonarQube' // Jenkins > Configure System
         SONAR_TOKEN = credentials('sonarqube-token') // Replace with your Sonar token ID
     }
 
