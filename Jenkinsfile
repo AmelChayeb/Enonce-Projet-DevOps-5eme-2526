@@ -11,7 +11,7 @@ pipeline {
         BRANCH = 'main'
         DOCKER_IMAGE = 'amelchayeb/mywebapp:1.0'
         SONARQUBE_SERVER = 'SonarQubeServer' // Jenkins > Configure System
-        SONAR_TOKEN = credentials('SONAR_TOKEN_ID') // Replace with your Sonar token ID
+        SONAR_TOKEN = credentials('sonarqube-token') // Replace with your Sonar token ID
     }
 
     stages {
