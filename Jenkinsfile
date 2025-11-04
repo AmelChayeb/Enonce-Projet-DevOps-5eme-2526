@@ -36,7 +36,10 @@ pipeline {
         withSonarQubeEnv('MySonarQube') { // Name of SonarQube server in Jenkins
             // Use withCredentials to avoid insecure interpolation
             withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
-                sh 'mvn sonar:sonar -Dsonar.projectKey=mywebapp -Dsonar.login=$SONAR_TOKEN'
+                withSonarQubeEnv('SonarQube') {
+    sh 'mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN'
+}
+
             }
         }
     }
